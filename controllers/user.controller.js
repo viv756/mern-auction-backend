@@ -27,8 +27,7 @@ export const register = async (req, res, next) => {
     paypalEmail,
   } = req.body;
 
-  console.log(req.body);
-
+  
   if (!userName || !email || !phone || !password || !address || !role) {
     return next(new ErrorHandler("Please fill full form.", 400));
   }
