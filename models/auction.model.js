@@ -4,6 +4,11 @@ const auctionSchema = new mongoose.Schema({
   title: String,
   description: String,
   startingBid: Number,
+  category: String,
+  condition: {
+    type: String,
+    enum: ["New", "Used"],
+  },
   currentBid: { type: Number, default: 0 },
   startTime: String,
   endTime: String,
