@@ -1,8 +1,9 @@
+import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import ErrorHandler from "../middlewares/errorHandler.js";
 import cloudinary from "../lib/cloudinary.js";
 import User from "../models/user.model.js";
 
-export const register = async (req, res, next) => {
+export const register = catchAsyncErrors(async (req, res, next) => {
   if (!req.files || Object.keys(req.files).length === 0) {
     return next(new ErrorHandler("Profile Image Required", 400));
   }
@@ -27,7 +28,6 @@ export const register = async (req, res, next) => {
     paypalEmail,
   } = req.body;
 
-  
   if (!userName || !email || !phone || !password || !address || !role) {
     return next(new ErrorHandler("Please fill full form.", 400));
   }
@@ -87,4 +87,4 @@ export const register = async (req, res, next) => {
     success: true,
     message: "User Registered",
   });
-};
+});
