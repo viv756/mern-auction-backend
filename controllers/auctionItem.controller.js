@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import cloudinary from "../lib/cloudinary.js";
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import ErrorHandler from "../middlewares/errorHandler.js";
@@ -77,5 +78,23 @@ export const getAllItems = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json({
     success: true,
     items,
+  });
+});
+
+export const getAuctionDetails = catchAsyncErrors(async (req, res, next) => {
+  const { id } = req.params;
+  
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return next(new ErrorHandler("Invalid Id format.", 400));
+  }
+  const auctionItem = await Auction.findById(id);
+  if (!auctionItem) {
+    return next(new ErrorHandler("Auction not found.", 404));
+  }
+  const bidders = auctionItem.bids.sort((a, b) => b.amount - a.amount);
+  res.status(200).json({
+    success: true,
+    auctionItem,
+    bidders,
   });
 });
