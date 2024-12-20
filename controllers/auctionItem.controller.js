@@ -83,7 +83,7 @@ export const getAllItems = catchAsyncErrors(async (req, res, next) => {
 
 export const getAuctionDetails = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
-  
+
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return next(new ErrorHandler("Invalid Id format.", 400));
   }
@@ -96,5 +96,13 @@ export const getAuctionDetails = catchAsyncErrors(async (req, res, next) => {
     success: true,
     auctionItem,
     bidders,
+  });
+});
+
+export const getMyAuctionItems = catchAsyncErrors(async (req, res, next) => {
+  const items = await Auction.find({ createdBy: req.user._id });
+  res.status(200).json({
+    success: true,
+    items,
   });
 });
