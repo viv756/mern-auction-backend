@@ -6,16 +6,14 @@ import User from "../models/user.model.js";
 
 export const proofOfCommission = catchAsyncErrors(async (req, res, next) => {
   if (!req.files || Object.keys(req.files).length === 0) {
-    return next(new ErrorHandler("Payment Proof Screenshot required.", 400))
+    return next(new ErrorHandler("Payment Proof Screenshot required.", 400));
   }
-  const { proof } = req.files 
-  const { amount, comment } = req.body 
-  const user = await User.findById(req.user._id)
+  const { proof } = req.files;
+  const { amount, comment } = req.body;
+  const user = await User.findById(req.user._id);
 
   if (!amount || !comment) {
-    return next(
-      new ErrorHandler("Ammount & comment are required fields.", 400)
-    );
+    return next(new ErrorHandler("Ammount & comment are required fields.", 400));
   }
 
   if (user.unpaidCommission === 0) {
@@ -39,17 +37,11 @@ export const proofOfCommission = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("ScreenShot format not supported.", 400));
   }
 
-  const cloudinaryResponse = await cloudinary.uploader.upload(
-    proof.tempFilePath,
-    {
-      folder: "MERN_AUCTION_PAYMENT_PROOFS",
-    }
-  );
+  const cloudinaryResponse = await cloudinary.uploader.upload(proof.tempFilePath, {
+    folder: "MERN_AUCTION_PAYMENT_PROOFS",
+  });
   if (!cloudinaryResponse || cloudinaryResponse.error) {
-    console.error(
-      "Cloudinary error:",
-      cloudinaryResponse.error || "Unknown cloudinary error."
-    );
+    console.error("Cloudinary error:", cloudinaryResponse.error || "Unknown cloudinary error.");
     return next(new ErrorHandler("Failed to upload payment proof.", 500));
   }
 
@@ -68,5 +60,4 @@ export const proofOfCommission = catchAsyncErrors(async (req, res, next) => {
       "Your proof has been submitted successfully. We will review it and responed to you within 24 hours.",
     commissionProof,
   });
-
-})
+});
