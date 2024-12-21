@@ -9,6 +9,7 @@ import userRouter from "./routes/user.route.js";
 import auctionItemRouter from "./routes/auctionItem.route.js";
 import bidRouter from "./routes/bid.route.js";
 import commissionRouter from "./routes/commission.route.js";
+import superAdminRouter from "./routes/superAdmin.route.js";
 
 const app = express();
 config();
@@ -35,6 +36,7 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/auctionitem", auctionItemRouter);
 app.use("/api/v1/bid", bidRouter);
 app.use("/api/v1/commission", commissionRouter);
+app.use("/api/v1/superadmin", superAdminRouter);
 
 connectDB();
 

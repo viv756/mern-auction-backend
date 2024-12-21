@@ -10,4 +10,4 @@ const commissionSchema = new mongoose.Schema({
 });
 
 const Commission = mongoose.model("Commission", commissionSchema);
-export default Commission
+export default Commission;
