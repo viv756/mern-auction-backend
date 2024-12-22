@@ -4,6 +4,7 @@ import ErrorHandler from "../middlewares/errorHandler.js";
 import Auction from "../models/auction.model.js";
 import PaymentProof from "../models/commissionProof.model.js";
 import User from "../models/user.model.js";
+import Commission from "../models/commissionProof.model.js";
 
 export const deleteAuctionItem = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
@@ -123,5 +124,38 @@ export const fetchAllUsers = catchAsyncErrors(async (req, res, next) => {
     success: true,
     biddersArray,
     auctioneersArray,
+  });
+});
+
+export const monthlyRevenue = catchAsyncErrors(async (req, res, next) => {
+  const payments = await Commission.aggregate([
+    {
+      $group: {
+        _id: {
+          month: { $month: "$createdAt" },
+          year: { $year: "$createdAt" },
+        },
+        totalAmount: { $sum: "$amount" },
+      },
+    },
+    {
+      $sort: { "_id.year": 1, "_id.month": 1 },
+    },
+  ]);
+
+  const tranformDataToMonthlyArray = (payments, totalMonths = 12) => {
+    const result = Array(totalMonths).fill(0);
+
+    payments.forEach((payment) => {
+      result[payment._id.month - 1] = payment.totalAmount;
+    });
+
+    return result;
+  };
+
+  const totalMonthlyRevenue = tranformDataToMonthlyArray(payments);
+  res.status(200).json({
+    success: true,
+    totalMonthlyRevenue,
   });
 });
