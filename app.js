@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 import { connectDB } from "./lib/db.js";
+import { endedAuctionCron } from "./automation/endedAuctionCron.js";
 import { errorMiddleware } from "./middlewares/errorHandler.js";
 import userRouter from "./routes/user.route.js";
 import auctionItemRouter from "./routes/auctionItem.route.js";
@@ -37,6 +38,8 @@ app.use("/api/v1/auctionitem", auctionItemRouter);
 app.use("/api/v1/bid", bidRouter);
 app.use("/api/v1/commission", commissionRouter);
 app.use("/api/v1/superadmin", superAdminRouter);
+
+endedAuctionCron()
 
 connectDB();
 

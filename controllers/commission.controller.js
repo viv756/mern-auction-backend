@@ -1,8 +1,19 @@
 import cloudinary from "../lib/cloudinary.js";
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import ErrorHandler from "../middlewares/errorHandler.js";
+import Auction from "../models/auction.model.js";
 import PaymentProof from "../models/commissionProof.model.js";
 import User from "../models/user.model.js";
+
+export const calculateCommission = async (auctionId) => {
+  const auction = await Auction.findById(auctionId);
+  if (!mongoose.Types.ObjectId.isValid(auctionId)) {
+    return next(new ErrorHandler("Invalid Auction Id format.", 400));
+  }
+  const commissionRate = 0.05;
+  const commission = auction.currentBid * commissionRate;
+  return commission;
+};
 
 export const proofOfCommission = catchAsyncErrors(async (req, res, next) => {
   if (!req.files || Object.keys(req.files).length === 0) {
