@@ -4,6 +4,7 @@ import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import ErrorHandler from "../middlewares/errorHandler.js";
 import Auction from "../models/auction.model.js";
 import User from "../models/user.model.js";
+import Bid from "../models/bid.model.js";
 
 export const addNewAuctionItem = catchAsyncErrors(async (req, res, next) => {
   if (!req.files || Object.keys(req.files).length === 0) {
@@ -150,6 +151,7 @@ export const republishItem = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Auction starting time must be less than ending time.", 400));
   }
 
+  // if republishing the auction Item. the highest bidder moneySpend need to be decreased
   if (auctionItem.highestBidder) {
     const highestBidder = await User.findById(auctionItem.highestBidder);
     highestBidder.moneySpent -= auctionItem.currentBid;
@@ -166,6 +168,9 @@ export const republishItem = catchAsyncErrors(async (req, res, next) => {
     runValidators: true,
     useFindAndModify: false,
   });
+
+  // to delete all bids of the auction Item
+  await Bid.deleteMany({ auctionItem: auctionItem._id });
 
   const createdBy = await User.findByIdAndUpdate(
     req.user._id,
