@@ -151,7 +151,7 @@ export const republishItem = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Auction starting time must be less than ending time.", 400));
   }
 
-  // if republishing the auction Item. the highest bidder moneySpend need to be decreased
+  // if the auction have any bidder decrement the amount that he bid for the auction
   if (auctionItem.highestBidder) {
     const highestBidder = await User.findById(auctionItem.highestBidder);
     highestBidder.moneySpent -= auctionItem.currentBid;
@@ -169,7 +169,7 @@ export const republishItem = catchAsyncErrors(async (req, res, next) => {
     useFindAndModify: false,
   });
 
-  // to delete all bids of the auction Item
+  // delete all bids of the auction item
   await Bid.deleteMany({ auctionItem: auctionItem._id });
 
   const createdBy = await User.findByIdAndUpdate(
