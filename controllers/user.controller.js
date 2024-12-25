@@ -91,7 +91,7 @@ export const register = catchAsyncErrors(async (req, res, next) => {
 export const login = catchAsyncErrors(async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return next(new ErrorHandler("Please fill full form."));
+    return next(new ErrorHandler("Please fill full form.", 400));
   }
   const user = await User.findOne({ email }).select("+password");
   if (!user) {
