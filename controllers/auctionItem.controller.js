@@ -137,7 +137,7 @@ export const republishItem = catchAsyncErrors(async (req, res, next) => {
   if (!req.body.startTime || !req.body.endTime) {
     return next(new ErrorHandler("Starttime and Endtime for republish is mandatory."));
   }
-  if (new Date(auctionItem.endTime > Date.now())) {
+  if (new Date(auctionItem.endTime) > Date.now()) {
     return next(new ErrorHandler("Auction is already active, cannot republish", 400));
   }
   let data = {
