@@ -31,9 +31,10 @@ export const addNewAuctionItem = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Auction starting time must be less than ending time.", 400));
   }
 
+  const currentTime = new Date();
   const alreadyOneAuctionActive = await Auction.find({
     createdBy: req.user._id,
-    endTime: { $gt: Date.now() },
+    endTime: { $gt: currentTime },
   });
 
   if (alreadyOneAuctionActive.length > 0) {
