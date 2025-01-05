@@ -4,7 +4,7 @@ import ErrorHandler from "../middlewares/errorHandler.js";
 import Auction from "../models/auction.model.js";
 import PaymentProof from "../models/commissionProof.model.js";
 import User from "../models/user.model.js";
-import Commission from "../models/commissionProof.model.js";
+import Commission from "../models/commission.model.js";
 
 export const deleteAuctionItem = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
