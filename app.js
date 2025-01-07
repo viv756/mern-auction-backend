@@ -28,10 +28,13 @@ app.use(
 
 const tempDir = process.env.TEMP_FILE_DIR || path.join(process.cwd(), "temp");
 
-if (!fs.existsSync(tempDir)) {
-  fs.mkdirSync(tempDir, { recursive: true });
-}
+// if (!fs.existsSync(tempDir)) {
+//   fs.mkdirSync(tempDir, { recursive: true });
+// }
 
+app.use(cookieParser());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true }));
 app.use(
   fileUpload({
     useTempFiles: true,
@@ -40,15 +43,6 @@ app.use(
   })
 );
 
-app.use(cookieParser());
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ extended: true }));
-app.use(
-  fileUpload({
-    useTempFiles: true,
-    tempFileDir: "/temp/",
-  })
-);
 
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/auctionitem", auctionItemRouter);
