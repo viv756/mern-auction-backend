@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import { config } from "dotenv";
 import express from "express";
 import cors from "cors";
@@ -21,6 +23,19 @@ app.use(
     origin: [process.env.FRONTEND_URL],
     methods: ["POST", "GET", "PUT", "DELETE"],
     credentials: true,
+  })
+);
+
+const tempDir = process.env.TEMP_FILE_DIR || path.join(process.cwd(), "temp");
+
+if (!fs.existsSync(tempDir)) {
+  fs.mkdirSync(tempDir, { recursive: true });
+}
+
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: tempDir,
   })
 );
 
